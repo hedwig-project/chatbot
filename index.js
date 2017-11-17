@@ -80,38 +80,6 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
     };
 }
 
-// function validateOrderFlowers(flowerType, date, time) {
-//     const flowerTypes = ['lilies', 'roses', 'tulips'];
-//     if (flowerType && flowerTypes.indexOf(flowerType.toLowerCase()) === -1) {
-//         return buildValidationResult(false, 'FlowerType', `We do not have ${flowerType}, would you like a different type of flower?  Our most popular flowers are roses`);
-//     }
-//     if (date) {
-//         if (!isValidDate(date)) {
-//             return buildValidationResult(false, 'PickupDate', 'I did not understand that, what date would you like to pick the flowers up?');
-//         }
-//         if (parseLocalDate(date) < new Date()) {
-//             return buildValidationResult(false, 'PickupDate', 'You can pick up the flowers from tomorrow onwards.  What day would you like to pick them up?');
-//         }
-//     }
-//     if (time) {
-//         if (time.length !== 5) {
-//             // Not a valid time; use a prompt defined on the build-time model.
-//             return buildValidationResult(false, 'PickupTime', null);
-//         }
-//         const hour = parseInt(time.substring(0, 2), 10);
-//         const minute = parseInt(time.substring(3), 10);
-//         if (isNaN(hour) || isNaN(minute)) {
-//             // Not a valid time; use a prompt defined on the build-time model.
-//             return buildValidationResult(false, 'PickupTime', null);
-//         }
-//         if (hour < 10 || hour > 16) {
-//             // Outside of business hours
-//             return buildValidationResult(false, 'PickupTime', 'Our business hours are from ten a m. to five p m. Can you specify a time during this range?');
-//         }
-//     }
-//     return buildValidationResult(true, null, null);
-// }
-
 function validateLocation(location) {
     const locationTypes = ['bedroom', 'kitchen'];
     if (location && locationTypes.indexOf(location.toLowerCase()) === -1) {
@@ -120,47 +88,51 @@ function validateLocation(location) {
     return buildValidationResult(true, null, null);
 }
 
- // --------------- Functions that control the bot's behavior -----------------------
-
-/**
- * Performs dialog management and fulfillment for ordering flowers.
- *
- * Beyond fulfillment, the implementation of this intent demonstrates the use of the elicitSlot dialog action
- * in slot validation and re-prompting.
- *
- */
-function mainHedwigHandler(intentRequest, callback) {
-    // const flowerType = intentRequest.currentIntent.slots.FlowerType;
-    // const date = intentRequest.currentIntent.slots.PickupDate;
-    // const time = intentRequest.currentIntent.slots.PickupTime;
-    const location = intentRequest.currentIntent.slots.location;
-    const relay = intentRequest.currentIntent.slots.relay;
-    const source = intentRequest.invocationSource;
-
-    if (source === 'DialogCodeHook') {
-        // Perform basic validation on the supplied input slots.  Use the elicitSlot dialog action to re-prompt for the first violation detected.
-        const slots = intentRequest.currentIntent.slots;
-
-        // Here we assume all intents require location. If this changes, the logic here must be updated
-        const validationResult = validateLocation(location);
-        if (!validationResult.isValid) {
-            slots[`${validationResult.violatedSlot}`] = null;
-            callback(elicitSlot(intentRequest.sessionAttributes, intentRequest.currentIntent.name, slots, validationResult.violatedSlot, validationResult.message));
-            return;
-        }
-
-        // Pass the price of the flowers back through session attributes to be used in various prompts defined on the bot model.
-        const outputSessionAttributes = intentRequest.sessionAttributes || {};
-        if (location) {
-            outputSessionAttributes.Status = 'olá, esse é um status de teste';
-        }
-        callback(delegate(outputSessionAttributes, intentRequest.currentIntent.slots));
-        return;
+function mockAllStatus() {
+    return {
+      'luminosity': '500',
+      'humidity': '20%',
+      'opening': 'off',
+      'presence': 'on',
+      'relay1': 'off',
+      'relay2': 'on',
+      'temperature': '25o',
+      'alarm': 'off'
     }
+}
 
-    // Order the flowers, and rely on the goodbye message of the bot to define the message to the end user.  In a real bot, this would likely involve a call to a backend service.
-    callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-    { contentType: 'PlainText', content: `Hi, here is the requested status for ${location}. For now, giving back a mocked status is all I can do ;)` }));
+ // --------------- Functions that control the bot's behavior -----------------------
+ const intentHandlers = {
+   'AllSensorStatus': allSensorStatusHandler
+ }
+
+function allSensorStatusHandler(intentRequest, callback) {
+  const location = intentRequest.currentIntent.slots.location;
+  const source = intentRequest.invocationSource;
+
+  if (source === 'DialogCodeHook') {
+      const slots = intentRequest.currentIntent.slots;
+
+      const validationResult = validateLocation(location);
+      if (!validationResult.isValid) {
+          slots[`${validationResult.violatedSlot}`] = null;
+          callback(elicitSlot(intentRequest.sessionAttributes, intentRequest.currentIntent.name, slots, validationResult.violatedSlot, validationResult.message));
+          return;
+      }
+
+      // Pass the price of the flowers back through session attributes to be used in various prompts defined on the bot model.
+      const outputSessionAttributes = intentRequest.sessionAttributes || {};
+      const mockedAllStatus = mockAllStatus()
+      if (location) {
+          outputSessionAttributes.Status = `1This is the status for ${location}: ${JSON.stringify(mockedAllStatus)}`;
+      }
+      callback(delegate(outputSessionAttributes, intentRequest.currentIntent.slots));
+      return;
+  }
+
+  // Order the flowers, and rely on the goodbye message of the bot to define the message to the end user.  In a real bot, this would likely involve a call to a backend service.
+  callback(close(intentRequest.sessionAttributes, 'Fulfilled',
+  { contentType: 'PlainText', content: `Not sure why this executes` }));
 }
 
  // --------------- Intents -----------------------
@@ -171,15 +143,12 @@ function mainHedwigHandler(intentRequest, callback) {
 function dispatch(intentRequest, callback) {
     console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
 
-    // we'll give back the same handler for all intentRequests. Probably should be split up between multiple handlers
-    return mainHedwigHandler(intentRequest, callback)
-
-    // const intentName = intentRequest.currentIntent.name;
+    const intentName = intentRequest.currentIntent.name;
 
     // Dispatch to your skill's intent handlers
-    // if (intentName === 'OrderFlowers') {
-        // return orderFlowers(intentRequest, callback);
-    // }
+    if (intentHandlers[intentName]) {
+      return intentHandlers[intentName](intentRequest, callback);
+    }
     throw new Error(`Intent with name ${intentName} not supported`);
 }
 
@@ -189,8 +158,8 @@ function dispatch(intentRequest, callback) {
 // The JSON body of the request is provided in the event slot.
 exports.handler = (event, context, callback) => {
     try {
-        // By default, treat the user request as coming from the America/New_York time zone.
-        process.env.TZ = 'America/New_York';
+        // By default, treat the user request as coming from the America/Sao_Paulo time zone.
+        process.env.TZ = 'America/Sao_Paulo';
         console.log(`event.bot.name=${event.bot.name}`);
 
         /**
