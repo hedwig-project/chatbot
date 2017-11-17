@@ -1,0 +1,47 @@
+alarmstatus:
+  location
+  response: on/off
+
+allsensors:
+  location
+  response:
+    humidity
+    opening
+    presence
+    relay1
+    relay2
+    temperature
+    alarm
+
+humiditysensors:
+  location
+  response:
+    humidity
+
+openingsensors:
+  location
+  response:
+    humidity
+
+presencesensors:
+  location
+  response:
+    humidity
+
+termperaturesensors:
+  location
+  response:
+    humidity
+
+relaysensors:
+  location
+  which relay
+  response:
+    humidity
+
+setalarm:
+  location
+  state
+  duration
+  response:
+    confirmation
