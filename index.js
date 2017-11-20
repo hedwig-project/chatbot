@@ -34,6 +34,23 @@ function close(sessionAttributes, fulfillmentState, message) {
             fulfillmentState,
             message,
         },
+        // responseCard: {
+        //     contentType: "application/vnd.amazonaws.card.generic",
+        //     genericAttachments: [
+        //         {
+        //             title:"card-title",
+        //             subTitle:"card-sub-title",
+        //             imageUrl:"https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+        //             attachmentLinkUrl:"https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+        //             buttons: [
+        //                 {
+        //                   "text": "Red",
+        //                   "value": "red"
+        //                 },
+        //             ]
+        //         }
+        //     ]
+        // }
     };
 }
 
