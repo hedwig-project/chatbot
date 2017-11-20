@@ -120,19 +120,20 @@ function allSensorStatusHandler(intentRequest, callback) {
           return;
       }
 
-      // Pass the price of the flowers back through session attributes to be used in various prompts defined on the bot model.
+      // Pass the status back through session attributes to be used in various prompts defined on the bot model.
       const outputSessionAttributes = intentRequest.sessionAttributes || {};
-      const mockedAllStatus = mockAllStatus()
       if (location) {
-          outputSessionAttributes.Status = `1This is the status for ${location}: ${JSON.stringify(mockedAllStatus)}`;
+          outputSessionAttributes.status = JSON.stringify(mockAllStatus());
       }
       callback(delegate(outputSessionAttributes, intentRequest.currentIntent.slots));
       return;
   }
 
+  const status = intentRequest.sessionAttributes.status;
+//   console.log('status: ', status)
   // Order the flowers, and rely on the goodbye message of the bot to define the message to the end user.  In a real bot, this would likely involve a call to a backend service.
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `Not sure why this executes` }));
+  { contentType: 'PlainText', content: `This is the status for ${location}: ${JSON.stringify(status)}` }));
 }
 
  // --------------- Intents -----------------------
@@ -141,7 +142,7 @@ function allSensorStatusHandler(intentRequest, callback) {
  * Called when the user specifies an intent for this skill.
  */
 function dispatch(intentRequest, callback) {
-    console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
+    // console.log(`dispatch userId=${intentRequest.userId}, intentName=${intentRequest.currentIntent.name}`);
 
     const intentName = intentRequest.currentIntent.name;
 
@@ -160,7 +161,7 @@ exports.handler = (event, context, callback) => {
     try {
         // By default, treat the user request as coming from the America/Sao_Paulo time zone.
         process.env.TZ = 'America/Sao_Paulo';
-        console.log(`event.bot.name=${event.bot.name}`);
+        // console.log(`event.bot.name=${event.bot.name}`);
 
         /**
          * Uncomment this if statement and populate with your Lex bot name and / or version as
