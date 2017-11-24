@@ -1,0 +1,20 @@
+{
+  "cognito": {
+    "poolId": "us-east-1:c7fc5e4f-0163-44ec-ac05-33483543542a"
+  },
+  "lex": {
+    "botName": "Hedwig",
+    "initialText": "Hello, I'm the Hedwig Assistant! Just type your command or click on the mic and say it.",
+    "initialSpeechInstruction": "You can try asking 'Is the bedroom alarm on?' to get started."
+  },
+  "polly": {
+    "voiceId": "Salli"
+  },
+  "ui": {
+    "parentOrigin": "",
+    "toolbarTitle": "Hedwig Assistant"
+  },
+  "recorder": {
+    "preset": "speech_recognition"
+  }
+}
