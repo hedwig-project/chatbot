@@ -23,23 +23,30 @@ function close(sessionAttributes, fulfillmentState, message) {
       fulfillmentState,
       message,
     },
-    // responseCard: {
-    //     contentType: "application/vnd.amazonaws.card.generic",
-    //     genericAttachments: [
-    //         {
-    //             title:"card-title",
-    //             subTitle:"card-sub-title",
-    //             imageUrl:"https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    //             attachmentLinkUrl:"https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    //             buttons: [
-    //                 {
-    //                   "text": "Red",
-    //                   "value": "red"
-    //                 },
-    //             ]
-    //         }
-    //     ]
-    // }
+  };
+}
+
+function closeWithImage(sessionAttributes, fulfillmentState, imageUrl) {
+  return {
+    sessionAttributes,
+    dialogAction: {
+      type: 'Close',
+      fulfillmentState,
+      message: {
+        "contentType": "SSML",
+        "content": "Here it is"
+      },
+      responseCard: {
+        contentType: "application/vnd.amazonaws.card.generic",
+        genericAttachments: [
+            {
+              "title":"Here it is",
+              imageUrl,
+              attachmentLinkUrl: imageUrl
+            }
+        ]
+      }
+    }
   };
 }
 
@@ -175,14 +182,13 @@ function mockAllStatus() {
 }
 
 function mockPicture(location) {
-  locationPictures = {
+  const locationPictures = {
     'bedroom': 'https://i.pinimg.com/736x/02/f5/7a/02f57a648ee803312085cf3676a6f79b--blogger-bedroom-bedroom-inspo.jpg', 
-    // TODO (if its really gonna be this way)
-    // 'dining room': ,
-    // 'garage': ,
-    // 'kitchen': ,
-    // 'laundry': ,
-    // 'living room': 
+    'dining room': 'https://images2.roomstogo.com/is/image/roomstogo/dr_rm_hillcreek_black_6_chrs_~Hill-Creek-Black-5-Pc-Rectangle-Dining-Room.jpeg?$pdp_gallery_945$',
+    'garage': 'http://naplesclosets.com/wp-content/uploads/2017/06/Car-garage-GettyImages-528098460-58a1fba93df78c475869ff29.jpg',
+    'kitchen': 'http://www.ikea.com/gb/en/images/rooms/ikea-contemporary-prep-station-for-whatever%E2%80%99s-in-season__1364309677390-s5.jpg',
+    'laundry': 'https://i.pinimg.com/736x/38/c1/d0/38c1d069530cb91b93fa24f83c5abf10.jpg',
+    'living room': 'https://images2.roomstogo.com/is/image/roomstogo/lr_rm_bellingham_gray~Cindy-Crawford-Home-Bellingham-Gray-7-Pc-Living-Room.jpeg?$pdp_gallery_945$' 
   }
   return locationPictures[location]
 }
@@ -410,7 +416,26 @@ function setAutoRelay(intentRequest, callback) {
 }
 
 function takePicture(intentRequest, callback) {
-  // TODO
+  const location = intentRequest.currentIntent.slots.location;
+  const source = intentRequest.invocationSource;
+
+  if (source === 'DialogCodeHook') {
+    const slots = intentRequest.currentIntent.slots;
+
+    const validationResult = validateLocation(location);
+    if (!validationResult.isValid) {
+      slots[`${validationResult.violatedSlot}`] = null;
+      callback(elicitSlot(intentRequest.sessionAttributes, intentRequest.currentIntent.name, slots, validationResult.violatedSlot, validationResult.message));
+      return;
+    }
+
+    const outputSessionAttributes = intentRequest.sessionAttributes || {};
+
+    callback(delegate(outputSessionAttributes, intentRequest.currentIntent.slots));
+    return;
+  }
+
+  callback(closeWithImage(intentRequest.sessionAttributes, 'Fulfilled', mockPicture(location)));
 }
 
 function temperatureSensorStatus(intentRequest, callback) {
