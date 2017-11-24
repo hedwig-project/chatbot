@@ -9,9 +9,11 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "deploy": "surge --project ./client --domain hedwig-assistant.surge.sh"
   },
   "devDependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "surge": "^0.19.0"
   }
 }
