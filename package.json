@@ -1,0 +1,17 @@
+{
+  "name": "chatbot",
+  "version": "0.1.0",
+  "description": "Hedwig Assistant for home automation and monitoring.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hedwig-project/chatbot.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "express": "^4.16.2"
+  }
+}
