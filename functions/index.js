@@ -90,7 +90,7 @@ function validateLocation(location) {
   const locationTypes = ['bedroom', 'dining room', 'garage', 'kitchen', 'laundry', 'living room'];
 
   if (location && locationTypes.indexOf(location.toLowerCase()) === -1) {
-    return buildValidationResult(false, 'location', `We do not have a(n) "${location}", would you like a different location? The most popular location asked for is bedroom!`);
+    return buildValidationResult(false, 'location', `We do not have a ${location}. Would you like to try a different location? The most popular location people ask for is the bedroom!`);
   }
 
   return buildValidationResult(true, null, null);
@@ -98,14 +98,14 @@ function validateLocation(location) {
 
 function mockAllStatus() {
   return {
-    'luminosity': '500',
-    'humidity': '20%',
-    'opening': 'off',
-    'presence': 'on',
-    'relay1': 'off',
-    'relay2': 'on',
-    'temperature': '25o',
-    'alarm': 'off',
+    'luminosity': (200 + Math.random() * 500.0).toFixed(1),
+    'humidity': (20.0 + Math.random() * 70.0).toFixed(1),
+    'opening': Math.random() < 0.5 ? 'on' : 'off',
+    'presence': Math.random() < 0.5 ? 'on' : 'off',
+    'relay1': Math.random() < 0.5 ? 'on' : 'off',
+    'relay2': Math.random() < 0.5 ? 'on' : 'off',
+    'temperature': (15.0 + Math.random() * 15.0).toFixed(1),
+    'alarm': Math.random() < 0.5 ? 'on' : 'off',
   };
 }
 
