@@ -114,6 +114,15 @@ function mockAllStatus() {
 const intentHandlers = {
   'AlarmStatus': alarmStatusHandler,
   'AllSensorStatus': allSensorStatusHandler,
+  'HumiditySensorStatus': humiditySensorStatus,
+  'OpeningSensorStatus': openingSensorStatus,
+  'PresenceSensorStatus': presenceSensorStatus,
+  'RelayStatus': relayStatus,
+  'SetAlarm': setAlarm,
+  'SetAutoRelay': setAutoRelay,
+  'TakePicture': takePicture,
+  'TemperatureSensorStatus': temperatureSensorStatus,
+  'ToggleRelay': toggleRelay,
 }
 
 function alarmStatusHandler(intentRequest, callback) {
@@ -173,6 +182,42 @@ function allSensorStatusHandler(intentRequest, callback) {
   // Order the flowers, and rely on the goodbye message of the bot to define the message to the end user.  In a real bot, this would likely involve a call to a backend service.
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
   { contentType: 'PlainText', content: `This is the status for ${location}: ${JSON.stringify(status)}` }));
+}
+
+function humiditySensorStatus(intentRequest, callback) {
+  // TODO
+}
+
+function openingSensorStatus(intentRequest, callback) {
+  // TODO
+}
+
+function presenceSensorStatus(intentRequest, callback) {
+  // TODO
+}
+
+function relayStatus(intentRequest, callback) {
+  // TODO
+}
+
+function setAlarm(intentRequest, callback) {
+  // TODO
+}
+
+function setAutoRelay(intentRequest, callback) {
+  // TODO
+}
+
+function takePicture(intentRequest, callback) {
+  // TODO
+}
+
+function temperatureSensorStatus(intentRequest, callback) {
+  // TODO
+}
+
+function toggleRelay(intentRequest, callback) {
+  // TODO
 }
 
 // --------------- Intents -----------------------
