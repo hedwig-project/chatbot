@@ -111,7 +111,7 @@ function validateLocationAndRelay(location, relay) {
 
   const relayTypes = ['coffee machine', 'coffeemaker', 'air purifier', 'light', 'humidifier', 'heater', 'air conditioner'];
   if (relay && relayTypes.indexOf(relay.toLowerCase()) === -1) {
-    return buildValidationResult(false, 'relay', `We do not have a ${relay}. Would you like to try a different relay? The most popular relay people ask for is the light!`);
+    return buildValidationResult(false, 'relay', `We do not have a ${relay}. Would you like to try a different device? The most popular device people ask for is the light!`);
   }
 
   return buildValidationResult(true, null, null);
@@ -125,7 +125,7 @@ function validateLocationAndState(location, state) {
 
   const stateTypes = ['on', 'off'];
   if (state && stateTypes.indexOf(state.toLowerCase()) === -1) {
-    return buildValidationResult(false, 'state', `${state} is not a valid command. You can turn it on or off`);
+    return buildValidationResult(false, 'state', `${state} is not a valid command. You can turn it on or off.`);
   }
 
   return buildValidationResult(true, null, null);
@@ -139,12 +139,12 @@ function validateLocationAndRelayAndStatus(location, relay, status) {
 
   const relayTypes = ['coffee machine', 'coffeemaker', 'air purifier', 'light', 'humidifier', 'heater', 'air conditioner'];
   if (relay && relayTypes.indexOf(relay.toLowerCase()) === -1) {
-    return buildValidationResult(false, 'relay', `We do not have a ${relay}. Would you like to try a different relay? The most popular relay people ask for is the light!`);
+    return buildValidationResult(false, 'relay', `We do not have a ${relay}. Would you like to try a different device? The most popular device people ask for is the light!`);
   }
 
   const statusTypes = ['on', 'off'];
   if (status && statusTypes.indexOf(status.toLowerCase()) === -1) {
-    return buildValidationResult(false, 'status', `${status} is not a valid command. You can turn it on or off`);
+    return buildValidationResult(false, 'status', `${status} is not a valid command. You can turn it on or off.`);
   }
 
   return buildValidationResult(true, null, null);
@@ -158,7 +158,7 @@ function validateLocationAndRelayAndSensor(location, relay, sensor) {
 
   const relayTypes = ['coffee machine', 'coffeemaker', 'air purifier', 'light', 'humidifier', 'heater', 'air conditioner'];
   if (relay && relayTypes.indexOf(relay.toLowerCase()) === -1) {
-    return buildValidationResult(false, 'relay', `We do not have a ${relay}. Would you like to try a different relay? The most popular relay people ask for is the light!`);
+    return buildValidationResult(false, 'relay', `We do not have a ${relay}. Would you like to try a different device? The most popular device people ask for is the light!`);
   }
 
   const sensorTypes = ['presence', 'opening', 'none'];
@@ -183,14 +183,14 @@ function mockAllStatus() {
 
 function mockPicture(location) {
   const locationPictures = {
-    'bedroom': 'https://i.pinimg.com/736x/02/f5/7a/02f57a648ee803312085cf3676a6f79b--blogger-bedroom-bedroom-inspo.jpg', 
+    'bedroom': 'https://i.pinimg.com/736x/02/f5/7a/02f57a648ee803312085cf3676a6f79b--blogger-bedroom-bedroom-inspo.jpg',
     'dining room': 'https://images2.roomstogo.com/is/image/roomstogo/dr_rm_hillcreek_black_6_chrs_~Hill-Creek-Black-5-Pc-Rectangle-Dining-Room.jpeg?$pdp_gallery_945$',
     'garage': 'http://naplesclosets.com/wp-content/uploads/2017/06/Car-garage-GettyImages-528098460-58a1fba93df78c475869ff29.jpg',
     'kitchen': 'http://www.ikea.com/gb/en/images/rooms/ikea-contemporary-prep-station-for-whatever%E2%80%99s-in-season__1364309677390-s5.jpg',
     'laundry': 'https://i.pinimg.com/736x/38/c1/d0/38c1d069530cb91b93fa24f83c5abf10.jpg',
-    'living room': 'https://images2.roomstogo.com/is/image/roomstogo/lr_rm_bellingham_gray~Cindy-Crawford-Home-Bellingham-Gray-7-Pc-Living-Room.jpeg?$pdp_gallery_945$' 
-  }
-  return locationPictures[location]
+    'living room': 'https://images2.roomstogo.com/is/image/roomstogo/lr_rm_bellingham_gray~Cindy-Crawford-Home-Bellingham-Gray-7-Pc-Living-Room.jpeg?$pdp_gallery_945$'
+  };
+  return locationPictures[location];
 }
 
 // --------------- Functions that control the bot's behavior -----------------------
@@ -280,7 +280,7 @@ function humiditySensorStatus(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `This is the humidity for ${location}: ${mockAllStatus().humidity}` }));
+  { contentType: 'PlainText', content: `The ${location} air humidity is ${mockAllStatus().humidity}%.` }));
 }
 
 function openingSensorStatus(intentRequest, callback) {
@@ -304,7 +304,7 @@ function openingSensorStatus(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `It is ${mockAllStatus().opening}` }));
+  { contentType: 'PlainText', content: `It is ${mockAllStatus().opening}.` }));
 }
 
 function presenceSensorStatus(intentRequest, callback) {
@@ -328,7 +328,7 @@ function presenceSensorStatus(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `There is ${mockAllStatus().presence ? 'someone' : 'no one'} in ${location}` }));
+  { contentType: 'PlainText', content: `There is ${mockAllStatus().presence ? 'someone/something' : 'no one'} in ${location}.` }));
 }
 
 function relayStatus(intentRequest, callback) {
@@ -353,7 +353,7 @@ function relayStatus(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `The ${relay} is ${mockAllStatus().relay} in ${location}` }));
+  { contentType: 'PlainText', content: `The ${location} ${relay} is ${mockAllStatus().relay}.` }));
 }
 
 function setAlarm(intentRequest, callback) {
@@ -378,7 +378,7 @@ function setAlarm(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `The alarm in ${location} was turned ${state}` }));
+  { contentType: 'PlainText', content: `The ${location} alarm was turned ${state}.` }));
 }
 
 function setAutoRelay(intentRequest, callback) {
@@ -412,7 +412,7 @@ function setAutoRelay(intentRequest, callback) {
   }
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
   { contentType: 'PlainText', content: `The ${location} ${relay} will be turned on ${sensorString}` +
-  `, between ${startTime} and ${endTime}, and will remain on for ${autoKeepOn}  minutes.` }));
+  `, between ${startTime} and ${endTime}, and will remain on for ${autoKeepOn} minutes.` }));
 }
 
 function takePicture(intentRequest, callback) {
@@ -459,7 +459,7 @@ function temperatureSensorStatus(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `This is the temperature for ${location}: ${mockAllStatus().temperature}` }));
+  { contentType: 'PlainText', content: `The ${location} temperature is ${mockAllStatus().temperature}ºC.` }));
 }
 
 function toggleRelay(intentRequest, callback) {
@@ -485,7 +485,7 @@ function toggleRelay(intentRequest, callback) {
   }
 
   callback(close(intentRequest.sessionAttributes, 'Fulfilled',
-  { contentType: 'PlainText', content: `The ${relay} was turned ${status} in ${location}` }));
+  { contentType: 'PlainText', content: `The ${location} ${relay} was turned ${status}.` }));
 }
 
 // --------------- Intents -----------------------
