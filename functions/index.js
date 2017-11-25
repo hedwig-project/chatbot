@@ -36,18 +36,8 @@ function closeWithImage(sessionAttributes, fulfillmentState, imageUrl) {
         contentType: 'PlainText',
         content: 'Here it is!',
       },
-      responseCard: {
-        contentType: 'application/vnd.amazonaws.card.generic',
-        genericAttachments: [
-          {
-            title: 'Your home',
-            imageUrl,
-            attachmentLinkUrl: imageUrl,
-          },
-        ],
-        version: '1',
-      }
-    }
+      responseCard: getResponseCard('Your home', imageUrl),
+    },
   };
 }
 
@@ -58,6 +48,20 @@ function delegate(sessionAttributes, slots) {
       type: 'Delegate',
       slots,
     },
+  };
+}
+
+function getResponseCard(title, imageUrl) {
+  return {
+    contentType: 'application/vnd.amazonaws.card.generic',
+    genericAttachments: [
+      {
+        title: 'Your home',
+        imageUrl,
+        attachmentLinkUrl: imageUrl,
+      },
+    ],
+    version: '1',
   };
 }
 
@@ -435,6 +439,10 @@ function takePicture(intentRequest, callback) {
     callback(delegate(outputSessionAttributes, intentRequest.currentIntent.slots));
     return;
   }
+
+  intentRequest.sessionAttributes.appContext = JSON.stringify({
+    responseCard: getResponseCard('Your home', mockPicture(location.toLowerCase())),
+  });
 
   callback(closeWithImage(intentRequest.sessionAttributes, 'Fulfilled', mockPicture(location)));
 }
