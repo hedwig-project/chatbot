@@ -5,13 +5,14 @@
   "lex": {
     "botName": "Hedwig",
     "initialText": "Hello, I'm the Hedwig Assistant! Just type your command or click on the mic and say it.",
-    "initialSpeechInstruction": "You can try asking 'Is the bedroom alarm on?' to get started."
+    "initialSpeechInstruction": "You can try asking about the bedroom to get started."
   },
   "polly": {
     "voiceId": "Salli"
   },
   "ui": {
     "parentOrigin": "",
+    "pushInitialTextOnRestart": false,
     "toolbarTitle": "Hedwig Assistant"
   },
   "recorder": {
