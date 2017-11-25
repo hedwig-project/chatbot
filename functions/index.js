@@ -33,18 +33,19 @@ function closeWithImage(sessionAttributes, fulfillmentState, imageUrl) {
       type: 'Close',
       fulfillmentState,
       message: {
-        "contentType": "SSML",
-        "content": "Here it is"
+        contentType: 'PlainText',
+        content: 'Here it is!',
       },
       responseCard: {
-        contentType: "application/vnd.amazonaws.card.generic",
+        contentType: 'application/vnd.amazonaws.card.generic',
         genericAttachments: [
-            {
-              "title":"Here it is",
-              imageUrl,
-              attachmentLinkUrl: imageUrl
-            }
-        ]
+          {
+            title: 'Your home',
+            imageUrl,
+            attachmentLinkUrl: imageUrl,
+          },
+        ],
+        version: '1',
       }
     }
   };
@@ -80,7 +81,7 @@ function isValidDate(date) {
 }
 
 function buildValidationResult(isValid, violatedSlot, messageContent) {
-  if (messageContent == null) {
+  if (messageContent === null) {
     return {
       isValid,
       violatedSlot,
