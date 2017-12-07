@@ -132,7 +132,7 @@
     canvas.toBlob(function(blob) {
       const filename = Date.now().toString();
       s3.upload({
-        Key: filename,
+        Key: `${filename}.png`,
         Body: blob,
         ACL: 'public-read',
       }, function(err, data) {
