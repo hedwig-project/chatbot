@@ -1,5 +1,8 @@
 'use strict';
 
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
+
 // --------------- Helpers to build responses which match the structure of the necessary dialog actions -----------------------
 
 function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message) {
@@ -440,11 +443,27 @@ function takePicture(intentRequest, callback) {
     return;
   }
 
-  intentRequest.sessionAttributes.appContext = JSON.stringify({
-    responseCard: getResponseCard('Your home', mockPicture(location.toLowerCase())),
-  });
+  let picture = mockPicture(location.toLowerCase());
 
-  callback(closeWithImage(intentRequest.sessionAttributes, 'Fulfilled', mockPicture(location)));
+  s3.listObjectsV2({ Bucket: 'hedwig-photo' }, function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+
+    if (data && data.Contents) {
+      const mostRecentPhoto = data.Contents.reduce(function(acc, obj) {
+        return Math.max(parseInt(obj.Key.substr(0, obj.Key.length - 4), 10), acc);
+      }, 0);
+
+      picture = `https://s3.amazonaws.com/hedwig-photo/${mostRecentPhoto}.png`;
+    }
+
+    intentRequest.sessionAttributes.appContext = JSON.stringify({
+      responseCard: getResponseCard('Your home', picture),
+    });
+
+    callback(closeWithImage(intentRequest.sessionAttributes, 'Fulfilled', picture));
+  });
 }
 
 function temperatureSensorStatus(intentRequest, callback) {
