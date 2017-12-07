@@ -7,6 +7,7 @@ const publicPath = '/';
 const app = express();
 
 app.use(publicPath, express.static('client'));
+app.use('/photo', express.static('photo'));
 
 app.listen(port, function () {
   console.log(`App listening on: http://localhost:${port}`);

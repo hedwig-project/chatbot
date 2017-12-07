@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <title>Hedwig Photo</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Font Dependencies -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" type="text/css">
+
+    <link href="./styles.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="container">
+      <div class="camera">
+        <video id="video">Video stream not available.</video>
+      </div>
+      <canvas id="canvas">
+      </canvas>
+      <div class="output">
+        <img id="photo" alt="The screen capture will appear in this box.">
+      </div>
+    </div>
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.154.0.min.js"></script>
+    <script>
+      const bucketName = 'hedwig-photo';
+      const bucketRegion = 'us-east-1';
+      const IdentityPoolId = 'us-east-1:9e5657b4-6b34-430d-a92d-619cf49253b7';
+
+      AWS.config.update({
+        region: bucketRegion,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: IdentityPoolId,
+        }),
+      });
+
+      const s3 = new AWS.S3({
+        apiVersion: '2006-03-01',
+        params: {Bucket: bucketName},
+      });
+    </script>
+    <script src="./capture.js"></script>
+  </body>
+</html>
